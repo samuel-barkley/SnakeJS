@@ -1,0 +1,1 @@
+export let gridSize = [500, 500]
