@@ -3,6 +3,7 @@ import * as d from "./drawLib.js";
 import * as s from "./static.js";
 let canvas;
 let ctx;
+let stopped = false;
 
 let startTime;
 let timeSindsLoad = 0;
@@ -47,7 +48,12 @@ function gameLoop()
 {
     update();
     draw();
-    window.requestAnimationFrame(gameLoop)
+    if (!stopped)
+    {
+        window.requestAnimationFrame(gameLoop);
+    }
+    else 
+        console.log("stopped");
 }
 
 function update()
@@ -177,6 +183,10 @@ function keyPressed(e)
         case 37:
             // Left
             player.direction = 3
+            break;
+        case 27:
+            // stop gameLoop if escape is pressed.
+            stopped = true;
             break;
     }
 }
