@@ -11,7 +11,8 @@ let timeSindsLastUpdate = 0;
 let currentTime = 0;
 let lastUpdateTime = 0;
 let updateCycleThing = 0;
-let frameTime = 1000;
+let frameTime = 500;
+let posCandidate = [Math.floor(Math.random()*10), Math.floor(Math.random()*10)];
 
 let apple = {
     pos: [0, 0],
@@ -41,7 +42,13 @@ function init()
     canvas = document.getElementById("canvas");
     ctx = canvas.getContext("2d");
     window.addEventListener("keydown", keyPressed, true);
-    
+    document.getElementById("stopButton").addEventListener("click", stopGame, false);
+    document.getElementById("startButton").addEventListener("click", startGame, false);
+}
+
+function startGame()
+{
+    stopped = false;
     startTime = Date.now();
     window.requestAnimationFrame(gameLoop);
     d.drawGrid(ctx);
@@ -76,7 +83,8 @@ function update()
         if (apple.pos[0] == player.pos[0] && apple.pos[1] == player.pos[1])
         {
             player.score++;
-            apple.pos = generateAppleLocation();
+            player.tail.push([lastPlayer.tail.at(-1)[0], lastPlayer.tail.at(-1)[1]]);
+            apple.pos = generateAppleLocation(posCandidate);
         }
     }
     
@@ -127,6 +135,8 @@ function updatePlayer(player)
             player.pos[0] = lastPlayer.pos[0] - 1
             break;
     }
+
+    checkHeadCollisions();
 }
 
 function draw()
@@ -160,25 +170,38 @@ function drawTail(player)
     });
 }
 
-function generateAppleLocation()
+function generateAppleLocation(posCandidate)
 {
-    let posCandidate = [Math.floor(Math.random()*10), Math.floor(Math.random()*10)];
+    posCandidate = [Math.floor(Math.random()*10), Math.floor(Math.random()*10)];
     if (player.pos[0] == posCandidate[0] && player.pos[1] == posCandidate[1])
     {
         console.log("new apple pos matches player pos, recalc pos.");
-        generateAppleLocation();
+        generateAppleLocation(posCandidate);
     }
 
     for (let i = 0; i < player.tail.length; i++)
     {
+        
         if (posCandidate[0] == player.tail[i][0] && posCandidate[1] == player.tail[i][1])
         {
-            generateAppleLocation();
+            console.log("made it");
+            generateAppleLocation(posCandidate);
         }
     }
 
     console.log(posCandidate);
     return posCandidate;
+}
+
+function checkHeadCollisions()
+{
+    for (let i = 0; i < player.tail.length; i++)
+    {
+        if (player.tail[i][0] == player.pos[0] && player.tail[i][1] == player.pos[1])
+        {
+            stopped = true;
+        }
+    }
 }
 
 function dealWithTime()
@@ -216,7 +239,12 @@ function keyPressed(e)
             break;
         case 27:
             // stop gameLoop if escape is pressed.
-            stopped = true;
+            stopGame();
             break;
     }
+}
+
+function stopGame()
+{
+    stopped = true;
 }
