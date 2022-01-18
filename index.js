@@ -22,7 +22,8 @@ let player = {
     pos: [3, 3],
     tail: [[2, 3], [1, 3]],
     colour: "black",
-    direction: 1
+    direction: 1,
+    score: 0
 }
 
 let lastPlayer = {
@@ -31,6 +32,8 @@ let lastPlayer = {
     colour: "black",
     direction: 1
 }
+
+// TODO: bug found to go in opposite direction (switch direction within one cycle)
 
 window.onload = init;
 function init()
@@ -61,7 +64,20 @@ function update()
     if (updateCycleThing > frameTime)
     {
         updateCycleThing = 0;
+        
         updatePlayer(player);
+
+        // Stop game when player crosses the edge of the grid.
+        if (player.pos[0]  >= s.gridCount || player.pos[0] < 0 || player.pos[1] >= s.gridCount || player.pos[1] < 0)
+        {
+            stopped = true;
+        }
+
+        if (apple.pos[0] == player.pos[0] && apple.pos[1] == player.pos[1])
+        {
+            player.score++;
+            apple.pos = generateAppleLocation();
+        }
     }
     
     dealWithTime();
@@ -111,12 +127,6 @@ function updatePlayer(player)
             player.pos[0] = lastPlayer.pos[0] - 1
             break;
     }
-
-    //console.log(player.tail.length)
-    for (let i = 0; i < player.tail.length; i++)
-    {
-        //console.log("pos " + player.pos[0] + ", " + player.pos[1] + ", tail: " + player.tail[i][0] + ", " + player.tail[i][1]);
-    }
 }
 
 function draw()
@@ -152,7 +162,23 @@ function drawTail(player)
 
 function generateAppleLocation()
 {
-    return [0, 0]
+    let posCandidate = [Math.floor(Math.random()*10), Math.floor(Math.random()*10)];
+    if (player.pos[0] == posCandidate[0] && player.pos[1] == posCandidate[1])
+    {
+        console.log("new apple pos matches player pos, recalc pos.");
+        generateAppleLocation();
+    }
+
+    for (let i = 0; i < player.tail.length; i++)
+    {
+        if (posCandidate[0] == player.tail[i][0] && posCandidate[1] == player.tail[i][1])
+        {
+            generateAppleLocation();
+        }
+    }
+
+    console.log(posCandidate);
+    return posCandidate;
 }
 
 function dealWithTime()
@@ -170,19 +196,23 @@ function keyPressed(e)
     {
         case 38:
             // Up
-            player.direction = 0;
+            if (player.direction != 2)
+                player.direction = 0;
             break;
         case 39:
             // Right
-            player.direction = 1;
+            if (player.direction != 3)
+                player.direction = 1;
             break;
         case 40:
             // Down
-            player.direction = 2;
+            if (player.direction != 0)
+                player.direction = 2;
             break;
         case 37:
             // Left
-            player.direction = 3
+            if (player.direction != 1)
+                player.direction = 3
             break;
         case 27:
             // stop gameLoop if escape is pressed.
