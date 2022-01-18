@@ -36,6 +36,7 @@ function init()
 {
     canvas = document.getElementById("canvas");
     ctx = canvas.getContext("2d");
+    window.addEventListener("keydown", keyPressed, true);
     
     startTime = Date.now();
     window.requestAnimationFrame(gameLoop);
@@ -80,12 +81,10 @@ function updatePlayer(player)
         if (i == 0)
         {
             player.tail[0] = [lastPlayer.pos[0], lastPlayer.pos[1]];
-            console.log("first tail pos " + player.tail[0][0] + ", " + player.tail[0][1]);
         }
         else 
         {
             player.tail[i] = lastPlayer.tail[i-1];
-            console.log("tail pos " + i + ", pos: " + lastPlayer.tail[i][0] + ", " + lastPlayer.tail[i][1]);
         }
     }
 
@@ -106,8 +105,6 @@ function updatePlayer(player)
             player.pos[0] = lastPlayer.pos[0] - 1
             break;
     }
-
-    console.log("Player pos: " + player.pos[0] + ", " + player.pos[1]);
 
     //console.log(player.tail.length)
     for (let i = 0; i < player.tail.length; i++)
@@ -159,4 +156,27 @@ function dealWithTime()
     timeSindsLastUpdate = currentTime - lastUpdateTime;
     timeSindsLoad += timeSindsLastUpdate;
     updateCycleThing += timeSindsLastUpdate;
+}
+
+function keyPressed(e)
+{
+    switch(e.keyCode)
+    {
+        case 38:
+            // Up
+            player.direction = 0;
+            break;
+        case 39:
+            // Right
+            player.direction = 1;
+            break;
+        case 40:
+            // Down
+            player.direction = 2;
+            break;
+        case 37:
+            // Left
+            player.direction = 3
+            break;
+    }
 }
