@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,8 +9,16 @@
     <link rel="icon" type="image/x-icon" href="./favicon.ico">
     <link rel="stylesheet" href="./index.css">
 </head>
+
 <body>
-    <canvas id="canvas" width="500" height="500"></canvas>
+    <div id="mainFlexContainer">
+        <canvas id="canvas" width="500" height="500"></canvas>
+        <div id="buttonContainer">
+            <input type="button" value="Start" id="startButton">
+            <input type="button" value="Stop" id="stopButton">
+        </div>
+    </div>
     <script type="module" src="./index.js"></script>
 </body>
+
 </html>
