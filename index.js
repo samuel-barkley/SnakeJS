@@ -12,8 +12,6 @@ let lastUpdateTime = 0;
 let updateCycleThing = 0;
 let frameTime = 1000;
 
-let lastPlayerPos = [0, 0]
-
 let apple = {
     pos: [0, 0],
     colour: "red"
@@ -22,6 +20,13 @@ let apple = {
 let player = {
     pos: [3, 3],
     tail: [[2, 3], [1, 3]],
+    colour: "black",
+    direction: 1
+}
+
+let lastPlayer = {
+    pos: [player.pos[0], player.pos[1]],
+    tail: [[player.tail[0][0], player.tail[0][1]], [player.tail[1][0], player.tail[1][1]]],
     colour: "black",
     direction: 1
 }
@@ -57,41 +62,52 @@ function update()
 
 function updatePlayer(player)
 {
+    lastPlayer = {
+        pos: [player.pos[0], player.pos[1]],
+        tail: [],
+        colour: "black",
+        direction: 1
+    }
+
+    for (let i = 0; i < player.tail.length; i++)
+    {
+        lastPlayer.tail[i] = [player.tail[i][0], player.tail[i][1]]
+    }
+
     // Update tail location
     for (let i = 0; i < player.tail.length; i++)
     {
         if (i == 0)
         {
-            player.tail[0] = [lastPlayerPos[0], lastPlayerPos[1]];
+            player.tail[0] = [lastPlayer.pos[0], lastPlayer.pos[1]];
             console.log("first tail pos " + player.tail[0][0] + ", " + player.tail[0][1]);
         }
         else 
         {
-            player.tail[i] = player.tail[i-1];
-            console.log("tail pos " + i + ", pos: " + player.tail[i][0] + ", " + player.tail[i][1]);
+            player.tail[i] = lastPlayer.tail[i-1];
+            console.log("tail pos " + i + ", pos: " + lastPlayer.tail[i][0] + ", " + lastPlayer.tail[i][1]);
         }
     }
-
-    lastPlayerPos[0] = player.pos[0];
-    lastPlayerPos[1] = player.pos[1];
 
     // Update head location
     switch (player.direction)
     {
         case 0:
             //console.log(player.pos);
-            player.pos[1] = player.pos[1] - 1
+            player.pos[1] = lastPlayer.pos[1] - 1
             break;
         case 1:
-            player.pos[0] = player.pos[0] + 1
+            player.pos[0] = lastPlayer.pos[0] + 1
             break;
         case 2:
-            player.pos[1] = player.pos[1] + 1
+            player.pos[1] = lastPlayer.pos[1] + 1
             break;
         case 3:
-            player.pos[0] = player.pos[0] - 1
+            player.pos[0] = lastPlayer.pos[0] - 1
             break;
     }
+
+    console.log("Player pos: " + player.pos[0] + ", " + player.pos[1]);
 
     //console.log(player.tail.length)
     for (let i = 0; i < player.tail.length; i++)
