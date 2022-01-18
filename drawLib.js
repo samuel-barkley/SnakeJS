@@ -3,9 +3,13 @@ import * as s from "./static.js";
 export function drawGrid(ctx) {
     for (let i = 0; i < s.gridSize[0] / 50; i++) {
         drawLine(ctx, [50 * i, 0], [50 * i, 500]);
+        if (s.gridCount < i + 1)
+            console.log("Something went wrong, gridSize doesn't match with gridCount.");
     }
     for (let j = 0; j < s.gridSize[1] / 50; j++) {
         drawLine(ctx, [0, 50 * j], [500, 50 * j]);
+        if (s.gridCount < j + 1)
+            console.log("Something went wrong, gridSize doesn't match with gridCount.");
     }
 }
 
