@@ -1,7 +1,6 @@
 import * as s from "./static.js";
 
 export function drawGrid(ctx) {
-    drawSquare(ctx, [0, 0]);
     for (let i = 0; i < s.gridSize[0] / 50; i++) {
         drawLine(ctx, [50 * i, 0], [50 * i, 500]);
     }
@@ -10,13 +9,38 @@ export function drawGrid(ctx) {
     }
 }
 
-export function drawSquare(ctx, pos)
+export function drawSquare(ctx, pos, colour = "black")
 {
-    ctx.fillRect(pos[0]*50, pos[1]*50, 50, 50);
+    if (colour == "black")
+    {
+        ctx.strokeStyle = "black";
+        ctx.fillStyle = "black";
+        ctx.fillRect(pos[0]*50, pos[1]*50, 50, 50);
+    }
+    else if (colour == "red")
+    {
+        ctx.strokeStyle = "red";
+        ctx.fillStyle = "red";
+        ctx.fillRect(pos[0]*50, pos[1]*50, 50, 50);
+    }
+    else if (colour == "grey")
+    {
+        ctx.strokeStyle = "grey";
+        ctx.fillStyle = "grey";
+        ctx.fillRect(pos[0]*50, pos[1]*50, 50, 50);
+    }
+
+    ctx.fillStyle = "black";
+    ctx.strokeStyle = "black";
 }
 
 export function drawLine(ctx, src, dest) {
     ctx.moveTo(src[0], src[1]);
     ctx.lineTo(dest[0], dest[1]);
     ctx.stroke();
+}
+
+export function blank(ctx)
+{
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
